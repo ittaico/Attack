@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_447922_attack.AttackUtils</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description>Server side logic for the 'Attack' process</description>
+        <name>AttackUtils</name>
+        <script><![CDATA[var AttackUtils = Class.create();
+AttackUtils.prototype = {
+    initialize: function() {},
+	
+	
+	/*
+	   var json = [{
+            "userID": String,
+            "firstName": String,
+            "lastName": String,
+            "title": String,
+            "manager": String,
+            "department": String,
+            "company": String,
+            "email": Email,
+            "roles": String Array}];
+	*/
+
+    createAttack: function(requestBodyObj) {
+     
+
+
+        var dueDate = new GlideDateTime();
+        dueDate.addSeconds(3600 * 24 * 7);
+
+        var attackGR = new GlideRecord('x_447922_attack_attack');
+        attackGR.initialize();
+        attackGR.setValue('description', JSON.stringify(requestBodyObj));
+        attackGR.setValue('due_date', dueDate);
+        return attackGR.insert();
+
+        // 		var users = this.getUsers(requestBodyObj);
+
+    },
+
+    getUsers: function(requestBodyObj) {
+        return requestBodyObj;
+    },
+    /*
+		var shortDescription = this.checkIfNull(requestBodyObj.shortDescription);
+        var qualityContactUsername = gs.getProperty('x_77594_quality_fo.qf.quality.contact.fdf');
+        if (shortDescription.toLowerCase().substring(0, 16) == 'new business api') {
+            qualityContactUsername = gs.getProperty('x_77594_quality_fo.qf.quality.contact.api');
+        }
+
+        var changeControlGR = new GlideRecord('x_77594_quality_fo_change_control');
+        changeControlGR.initialize();
+        changeControlGR.setValue('due_date_qf', dueDate);
+        changeControlGR.setValue('quality_contact', this.getFieldFromTable('sys_user', 'user_name', qualityContactUsername, 'sys_id'));
+        changeControlGR.setValue('department', this.getFieldFromTable('cmn_department', 'name', 'Sales', 'sys_id'));
+        changeControlGR.setValue('short_description', shortDescription);
+        //var assignedTo = this.getFieldFromTable('sys_user','user_name',this.checkIfNull(requestBodyObj.assignedTo),'sys_id');
+        //changeControlGR.setValue('assigned_to',assignedTo);
+        //Or
+        changeControlGR.setValue('assigned_to', this.getFieldFromTable('sys_user', 'user_name', qualityContactUsername, 'sys_id'));
+        var assignedTo = this.getFieldFromTable('sys_user', 'user_name', this.checkIfNull(requestBodyObj.assignedTo), 'name');
+        var comments = 'Record opened from Salesforce by: ' + assignedTo;
+        changeControlGR.setValue('change_comments', comments);
+        //
+        var businessCompany = this.getFieldFromTable('x_77594_quality_fo_business_company', 'name', this.checkIfNull(requestBodyObj.businessCompany), 'sys_id');
+        changeControlGR.setValue('business_company', businessCompany);
+        changeControlGR.setValue('justification', this.checkIfNull(requestBodyObj.reasonForChange));
+        changeControlGR.setValue('comments', this.checkIfNull(requestBodyObj.comment));
+        changeControlGR.setValue('proposed_situation', this.getProposedSituation(requestBodyObj, suppliers, materials, territories));
+        var ccSysId = changeControlGR.insert();
+
+        // Customer
+        var customer = this.getFieldFromTable('x_77594_quality_fo_sap_customer', 'customer_code', this.checkIfNull(requestBodyObj.customerCode), 'sys_id');
+        var ccCustomerGR = new GlideRecord('x_77594_quality_fo_change_control_customers');
+        ccCustomerGR.initialize();
+        ccCustomerGR.setValue('customer_change_reference', ccSysId);
+        ccCustomerGR.setValue('customer_name', customer);
+        ccCustomerGR.insert();
+
+        for (var i = 0; i < materials.length; i++) {
+            var materialCode = this.checkIfNull(materials[i].code);
+            if (materialCode != '')
+                this.addChangeControlMaterial(ccSysId, materialCode);
+        }
+
+        //	for (var j=0;j<suppliers.length;j++) {
+        //		var supplierCode = this.checkIfNull(suppliers[j].code);
+        //		if (supplierCode != '')
+        //			this.addChangeControlSupplier(ccSysId,supplierCode);
+        //	}
+
+        return ccSysId;
+    },
+	
+	checkIfNull: function(obj) {
+		return (obj) ? obj.toString() : '';
+	}, 
+	*/
+
+    type: 'AttackUtils'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-02-09 13:56:01</sys_created_on>
+        <sys_id>5e1c44acdb5a20100bc4f26b689619b8</sys_id>
+        <sys_mod_count>3</sys_mod_count>
+        <sys_name>AttackUtils</sys_name>
+        <sys_package display_value="Attack" source="x_447922_attack">773d3b98db1a20100bc4f26b689619c5</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Attack">773d3b98db1a20100bc4f26b689619c5</sys_scope>
+        <sys_update_name>sys_script_include_5e1c44acdb5a20100bc4f26b689619b8</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-02-09 18:45:07</sys_updated_on>
+    </sys_script_include>
+</record_update>
