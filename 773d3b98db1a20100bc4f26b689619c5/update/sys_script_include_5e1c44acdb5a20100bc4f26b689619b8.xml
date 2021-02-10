@@ -5,101 +5,101 @@
         <api_name>x_447922_attack.AttackUtils</api_name>
         <caller_access/>
         <client_callable>false</client_callable>
-        <description>Server side logic for the 'Attack' process</description>
+        <description>Server side logic for the 'Attack' process&#13;
+&#13;
+ StolenData = {&#13;
+             URL: String,&#13;
+            Company_name: String,&#13;
+            IT_technician: String,&#13;
+            User_list: [{&#13;
+                "userID": String,&#13;
+                "firstName": String,&#13;
+                "lastName": String,&#13;
+                "title": String,&#13;
+                "manager": String,&#13;
+                "department": String,&#13;
+                "company": String,&#13;
+                "email": Email,&#13;
+                "roles": String&#13;
+            }]&#13;
+        };</description>
         <name>AttackUtils</name>
         <script><![CDATA[var AttackUtils = Class.create();
 AttackUtils.prototype = {
     initialize: function() {},
-	
-	
-	/*
-	   var json = [{
-            "userID": String,
-            "firstName": String,
-            "lastName": String,
-            "title": String,
-            "manager": String,
-            "department": String,
-            "company": String,
-            "email": Email,
-            "roles": String Array}];
-	*/
 
+	
     createAttack: function(requestBodyObj) {
-     
-
-
+		var users = requestBodyObj.User_list;
+		var targets = this.getTargets(users);
+		
+        var attackID = this.createAttackRecord(requestBodyObj);
+		this.createTargetRecords(targets, attackID);
+		
+        return attackID;
+    },
+	
+	createAttackRecord: function(requestBodyObj, targets){
+		var companyName = requestBodyObj.Company_name;
+        var URL = requestBodyObj.URL;
+        var itTechnician = requestBodyObj.IT_technician;
+//      var users = requestBodyObj.User_list;
+// 		var targets = this.getTargets(users);
         var dueDate = new GlideDateTime();
         dueDate.addSeconds(3600 * 24 * 7);
 
-        var attackGR = new GlideRecord('x_447922_attack_attack');
+		var attackGR = new GlideRecord('x_447922_attack_attack');
         attackGR.initialize();
-        attackGR.setValue('description', JSON.stringify(requestBodyObj));
+        attackGR.setValue('company_structure', JSON.stringify(requestBodyObj));
         attackGR.setValue('due_date', dueDate);
+        attackGR.setValue('company_name', companyName);
+        attackGR.setValue('url', URL);
+        attackGR.setValue('it_technician', itTechnician);
+//         attackGR.setValue('description', JSON.stringify(targets));
         return attackGR.insert();
-
-        // 		var users = this.getUsers(requestBodyObj);
-
-    },
-
-    getUsers: function(requestBodyObj) {
-        return requestBodyObj;
-    },
-    /*
-		var shortDescription = this.checkIfNull(requestBodyObj.shortDescription);
-        var qualityContactUsername = gs.getProperty('x_77594_quality_fo.qf.quality.contact.fdf');
-        if (shortDescription.toLowerCase().substring(0, 16) == 'new business api') {
-            qualityContactUsername = gs.getProperty('x_77594_quality_fo.qf.quality.contact.api');
-        }
-
-        var changeControlGR = new GlideRecord('x_77594_quality_fo_change_control');
-        changeControlGR.initialize();
-        changeControlGR.setValue('due_date_qf', dueDate);
-        changeControlGR.setValue('quality_contact', this.getFieldFromTable('sys_user', 'user_name', qualityContactUsername, 'sys_id'));
-        changeControlGR.setValue('department', this.getFieldFromTable('cmn_department', 'name', 'Sales', 'sys_id'));
-        changeControlGR.setValue('short_description', shortDescription);
-        //var assignedTo = this.getFieldFromTable('sys_user','user_name',this.checkIfNull(requestBodyObj.assignedTo),'sys_id');
-        //changeControlGR.setValue('assigned_to',assignedTo);
-        //Or
-        changeControlGR.setValue('assigned_to', this.getFieldFromTable('sys_user', 'user_name', qualityContactUsername, 'sys_id'));
-        var assignedTo = this.getFieldFromTable('sys_user', 'user_name', this.checkIfNull(requestBodyObj.assignedTo), 'name');
-        var comments = 'Record opened from Salesforce by: ' + assignedTo;
-        changeControlGR.setValue('change_comments', comments);
-        //
-        var businessCompany = this.getFieldFromTable('x_77594_quality_fo_business_company', 'name', this.checkIfNull(requestBodyObj.businessCompany), 'sys_id');
-        changeControlGR.setValue('business_company', businessCompany);
-        changeControlGR.setValue('justification', this.checkIfNull(requestBodyObj.reasonForChange));
-        changeControlGR.setValue('comments', this.checkIfNull(requestBodyObj.comment));
-        changeControlGR.setValue('proposed_situation', this.getProposedSituation(requestBodyObj, suppliers, materials, territories));
-        var ccSysId = changeControlGR.insert();
-
-        // Customer
-        var customer = this.getFieldFromTable('x_77594_quality_fo_sap_customer', 'customer_code', this.checkIfNull(requestBodyObj.customerCode), 'sys_id');
-        var ccCustomerGR = new GlideRecord('x_77594_quality_fo_change_control_customers');
-        ccCustomerGR.initialize();
-        ccCustomerGR.setValue('customer_change_reference', ccSysId);
-        ccCustomerGR.setValue('customer_name', customer);
-        ccCustomerGR.insert();
-
-        for (var i = 0; i < materials.length; i++) {
-            var materialCode = this.checkIfNull(materials[i].code);
-            if (materialCode != '')
-                this.addChangeControlMaterial(ccSysId, materialCode);
-        }
-
-        //	for (var j=0;j<suppliers.length;j++) {
-        //		var supplierCode = this.checkIfNull(suppliers[j].code);
-        //		if (supplierCode != '')
-        //			this.addChangeControlSupplier(ccSysId,supplierCode);
-        //	}
-
-        return ccSysId;
-    },
+	},
 	
-	checkIfNull: function(obj) {
-		return (obj) ? obj.toString() : '';
-	}, 
-	*/
+	createTargetRecords: function(targets, attackID){
+// 		targets.forEach(this.createTargetRecord(user, attackID));
+		targets.forEach(function(user){
+			var targetGR = new GlideRecord('x_447922_attack_attack_targets');
+			targetGR.initialize();
+			targetGR.setValue('name', user.name);
+			targetGR.setValue('email', user.email);
+			targetGR.setValue('related_attack', attackID);
+			targetGR.insert();
+			});
+		return true;
+	},
+	
+	createTargetRecord: function(user, attackID){
+		var targetGR = new GlideRecord('x_447922_attack_attack_targets');
+		targetGR.initialize();
+		targetGR.setValue('name', user.name);
+		targetGR.setValue('email', user.email);
+		targetGR.setValue('related_attack', attackID);
+		targetGR.insert();
+	},
+	
+    //filtering for targets - users with 'admin' role
+    getTargets: function(users) {
+        var adminUsers = users.filter(this.isAdmin);
+        return adminUsers.map(this.targetInfo);
+    },
+
+    //Filter helper function
+   isAdmin: function(user) {
+		// return user.roles ? user.roles.includes('admin'): false;
+		return user.roles ? user.roles.indexOf('admin') !== -1 : false;
+    },
+
+    //Map helper function
+    targetInfo: function(user) {
+        var res = {};
+        res.name = user.firstName + " " + user.lastName;
+        res.email = user.email;
+        return res;
+    },
 
     type: 'AttackUtils'
 };]]></script>
@@ -107,13 +107,13 @@ AttackUtils.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2021-02-09 13:56:01</sys_created_on>
         <sys_id>5e1c44acdb5a20100bc4f26b689619b8</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>27</sys_mod_count>
         <sys_name>AttackUtils</sys_name>
         <sys_package display_value="Attack" source="x_447922_attack">773d3b98db1a20100bc4f26b689619c5</sys_package>
         <sys_policy/>
         <sys_scope display_value="Attack">773d3b98db1a20100bc4f26b689619c5</sys_scope>
         <sys_update_name>sys_script_include_5e1c44acdb5a20100bc4f26b689619b8</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2021-02-09 18:45:07</sys_updated_on>
+        <sys_updated_on>2021-02-10 18:50:32</sys_updated_on>
     </sys_script_include>
 </record_update>

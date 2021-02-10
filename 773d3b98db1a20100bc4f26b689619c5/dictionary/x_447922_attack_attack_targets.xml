@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="live_feed=true" label="Attack Targets" max_length="40" name="x_447922_attack_attack_targets" type="collection">
+        <element label="Email" max_length="100" name="email" type="email"/>
+        <element label="Name" max_length="40" name="name" type="string"/>
+        <element attributes="ignore_filter_on_new=true" default="javascript:global.getNextObjNumberPadded();" label="Number" max_length="40" name="number" type="string"/>
+        <element label="Related Attack" max_length="32" name="related_attack" reference="x_447922_attack_attack" type="reference"/>
+        <element choice="3" default="Attack me!" label="Status" max_length="40" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Attack me!" sequence="1" value="Attack me!"/>
+                <element inactive_on_update="false" label="Attacked" sequence="2" value="Attacked"/>
+                <element inactive_on_update="false" label="Attack Successful" sequence="3" value="Attack Successful"/>
+                <element inactive_on_update="false" label="Attack Unsuccessful" sequence="4" value="Attack Unsuccessful"/>
+            </choice>
+        </element>
+        <index name="index">
+            <element name="related_attack"/>
+        </index>
+    </element>
+</database>
