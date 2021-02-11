@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_documentation element="it_technician_email" label="IT technician email" language="en" table="x_447922_attack_attack">
+        <sys_documentation action="INSERT_OR_UPDATE">
+            <element>it_technician_email</element>
+            <help/>
+            <hint/>
+            <label>IT technician email</label>
+            <language>en</language>
+            <name>x_447922_attack_attack</name>
+            <plural>IT technician emails</plural>
+            <sys_class_name>sys_documentation</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2021-02-11 16:41:40</sys_created_on>
+            <sys_id>5d260b09db1220100bc4f26b68961940</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>IT technician email</sys_name>
+            <sys_package display_value="Attack" source="x_447922_attack">773d3b98db1a20100bc4f26b689619c5</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Attack">773d3b98db1a20100bc4f26b689619c5</sys_scope>
+            <sys_update_name>sys_documentation_x_447922_attack_attack_it_technician_email_en</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2021-02-11 16:41:40</sys_updated_on>
+            <url/>
+            <url_target/>
+        </sys_documentation>
+    </sys_documentation>
+</record_update>

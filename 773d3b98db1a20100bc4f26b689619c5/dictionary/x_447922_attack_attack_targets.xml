@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
-    <element attributes="live_feed=true" label="Attack Targets" max_length="40" name="x_447922_attack_attack_targets" type="collection">
+    <element attributes="live_feed=true" label="Attack Targets" max_length="40" name="x_447922_attack_attack_targets" sizeclass="120" type="collection">
         <element label="Email" max_length="100" name="email" type="email"/>
+        <element label="First name" max_length="40" name="first_name" type="string"/>
+        <element label="Last name" max_length="40" name="last_name" type="string"/>
         <element label="Name" max_length="40" name="name" type="string"/>
         <element attributes="ignore_filter_on_new=true" default="javascript:global.getNextObjNumberPadded();" label="Number" max_length="40" name="number" type="string"/>
         <element label="Related Attack" max_length="32" name="related_attack" reference="x_447922_attack_attack" type="reference"/>

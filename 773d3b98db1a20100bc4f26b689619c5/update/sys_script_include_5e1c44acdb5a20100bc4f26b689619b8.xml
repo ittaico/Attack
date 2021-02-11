@@ -11,6 +11,7 @@
              URL: String,&#13;
             Company_name: String,&#13;
             IT_technician: String,&#13;
+            IT_technician_email,&#13;
             User_list: [{&#13;
                 "userID": String,&#13;
                 "firstName": String,&#13;
@@ -28,59 +29,110 @@
 AttackUtils.prototype = {
     initialize: function() {},
 
-	
+    phish: function(attackGR) {
+        var itTch = attackGR.getValue('it_technician');
+        var itTchEmail = attackGR.getValue('it_technician_email');
+        // get targets names and email
+        var targets = this.getRelatedTargets(attackGR);
+
+        // send phishing emails to all targets
+        this.sendPhishingEmails(targets, attackGR, itTch, itTchEmail);
+
+        attackGR.setValue('state', 102);
+        attackGR.update();
+        gs.addInfoMessage('Trying to Phish targets...');
+        action.setRedirectURL(attackGR);
+    },
+
+    cancel: function(attackGR) {
+        attackGR.setValue('state', 105);
+        attackGR.update();
+        gs.addInfoMessage('Attack is Cancelled');
+        // gs.eventQueue('x_447922_attack.attack', attackGR);
+        action.setRedirectURL(attackGR);
+    },
+
+    attack: function(attackGR) {
+        attackGR.setValue('state', 104);
+        attackGR.update();
+        gs.addInfoMessage('Attack was successful!');
+        // gs.eventQueue('x_447922_attack.attack', attackGR);
+        action.setRedirectURL(attackGR);
+    },
+
     createAttack: function(requestBodyObj) {
-		var users = requestBodyObj.User_list;
-		var targets = this.getTargets(users);
-		
+        var users = requestBodyObj.User_list;
+        var targets = this.getTargets(users);
+
         var attackID = this.createAttackRecord(requestBodyObj);
-		this.createTargetRecords(targets, attackID);
-		
+        this.createTargetRecords(targets, attackID);
+
         return attackID;
     },
-	
-	createAttackRecord: function(requestBodyObj, targets){
-		var companyName = requestBodyObj.Company_name;
+
+    createAttackRecord: function(requestBodyObj, targets) {
+        var companyName = requestBodyObj.Company_name;
         var URL = requestBodyObj.URL;
         var itTechnician = requestBodyObj.IT_technician;
-//      var users = requestBodyObj.User_list;
-// 		var targets = this.getTargets(users);
+        var itTechnicianEmail = requestBodyObj.IT_technician_email;
         var dueDate = new GlideDateTime();
         dueDate.addSeconds(3600 * 24 * 7);
 
-		var attackGR = new GlideRecord('x_447922_attack_attack');
+        var attackGR = new GlideRecord('x_447922_attack_attack');
         attackGR.initialize();
         attackGR.setValue('company_structure', JSON.stringify(requestBodyObj));
         attackGR.setValue('due_date', dueDate);
         attackGR.setValue('company_name', companyName);
         attackGR.setValue('url', URL);
         attackGR.setValue('it_technician', itTechnician);
-//         attackGR.setValue('description', JSON.stringify(targets));
+        attackGR.setValue('it_technician_email', itTechnicianEmail);
         return attackGR.insert();
-	},
-	
-	createTargetRecords: function(targets, attackID){
-// 		targets.forEach(this.createTargetRecord(user, attackID));
-		targets.forEach(function(user){
-			var targetGR = new GlideRecord('x_447922_attack_attack_targets');
-			targetGR.initialize();
-			targetGR.setValue('name', user.name);
-			targetGR.setValue('email', user.email);
-			targetGR.setValue('related_attack', attackID);
-			targetGR.insert();
-			});
-		return true;
-	},
-	
-	createTargetRecord: function(user, attackID){
-		var targetGR = new GlideRecord('x_447922_attack_attack_targets');
-		targetGR.initialize();
-		targetGR.setValue('name', user.name);
-		targetGR.setValue('email', user.email);
-		targetGR.setValue('related_attack', attackID);
-		targetGR.insert();
-	},
-	
+    },
+
+    createTargetRecords: function(targets, attackID) {
+        targets.forEach(function(user) {
+            var targetGR = new GlideRecord('x_447922_attack_attack_targets');
+            targetGR.initialize();
+			targetGR.setValue('first_name', user.firstName);
+			targetGR.setValue('last_name', user.lastName);
+            targetGR.setValue('name', user.name);
+            targetGR.setValue('email', user.email);
+            targetGR.setValue('related_attack', attackID);
+            targetGR.insert();
+        });
+        return true;
+    },
+
+    createTargetRecord: function(user, attackID) {
+        var targetGR = new GlideRecord('x_447922_attack_attack_targets');
+        targetGR.initialize();
+        targetGR.setValue('name', user.name);
+        targetGR.setValue('email', user.email);
+        targetGR.setValue('related_attack', attackID);
+        targetGR.insert();
+    },
+
+    getRelatedTargets: function(attackGR) {
+        var attackId = attackGR.getUniqueValue();
+        var targets = [];
+        var target = new GlideRecord('x_447922_attack_attack_targets');
+        target.addQuery('related_attack', attackId);
+        target.query();
+        while (target.next()) {
+            var targetObj = {};
+            targetObj.name = target.getValue('first_name');
+            targetObj.email = target.getValue('email');
+            targets.push(targetObj);
+        }
+        return targets;
+    },
+
+    sendPhishingEmails: function(targets, attackGR, itTch, itTchEmail) {
+        targets.forEach(function(target) {
+			gs.eventQueue('x_447922_attack.phish', attackGR, target.name, target.email);
+        });
+    },
+
     //filtering for targets - users with 'admin' role
     getTargets: function(users) {
         var adminUsers = users.filter(this.isAdmin);
@@ -88,14 +140,16 @@ AttackUtils.prototype = {
     },
 
     //Filter helper function
-   isAdmin: function(user) {
-		// return user.roles ? user.roles.includes('admin'): false;
-		return user.roles ? user.roles.indexOf('admin') !== -1 : false;
+    isAdmin: function(user) {
+        // return user.roles ? user.roles.includes('admin'): false;
+        return user.roles ? user.roles.indexOf('admin') !== -1 : false;
     },
 
     //Map helper function
     targetInfo: function(user) {
         var res = {};
+		res.firstName = user.firstName;
+		res.lastName = user.lastName;
         res.name = user.firstName + " " + user.lastName;
         res.email = user.email;
         return res;
@@ -107,13 +161,13 @@ AttackUtils.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2021-02-09 13:56:01</sys_created_on>
         <sys_id>5e1c44acdb5a20100bc4f26b689619b8</sys_id>
-        <sys_mod_count>27</sys_mod_count>
+        <sys_mod_count>38</sys_mod_count>
         <sys_name>AttackUtils</sys_name>
         <sys_package display_value="Attack" source="x_447922_attack">773d3b98db1a20100bc4f26b689619c5</sys_package>
         <sys_policy/>
         <sys_scope display_value="Attack">773d3b98db1a20100bc4f26b689619c5</sys_scope>
         <sys_update_name>sys_script_include_5e1c44acdb5a20100bc4f26b689619b8</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2021-02-10 18:50:32</sys_updated_on>
+        <sys_updated_on>2021-02-11 18:25:45</sys_updated_on>
     </sys_script_include>
 </record_update>

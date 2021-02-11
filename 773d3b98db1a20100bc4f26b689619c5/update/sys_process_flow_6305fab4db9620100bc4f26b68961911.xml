@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_process_flow">
+    <sys_process_flow action="INSERT_OR_UPDATE">
+        <active>true</active>
+        <condition table="x_447922_attack_attack">state=105^EQ<item display_value="Closed - Cancelled" endquery="false" field="state" goto="false" newquery="false" operator="=" or="false" value="105"/>
+            <item endquery="true" field="" goto="false" newquery="false" operator="=" or="false" value=""/>
+        </condition>
+        <description/>
+        <label>Closed - Cancelled</label>
+        <name>Closed - Cancelled</name>
+        <order>5</order>
+        <sys_class_name>sys_process_flow</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2021-02-10 20:49:07</sys_created_on>
+        <sys_id>6305fab4db9620100bc4f26b68961911</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Closed - Cancelled</sys_name>
+        <sys_package display_value="Attack" source="x_447922_attack">773d3b98db1a20100bc4f26b689619c5</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Attack">773d3b98db1a20100bc4f26b689619c5</sys_scope>
+        <sys_update_name>sys_process_flow_6305fab4db9620100bc4f26b68961911</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2021-02-10 21:07:03</sys_updated_on>
+        <table>x_447922_attack_attack</table>
+    </sys_process_flow>
+</record_update>

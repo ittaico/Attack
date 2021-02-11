@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
-    <element extends="task" label="Attack" max_length="40" name="x_447922_attack_attack" sizeclass="7" type="collection">
+    <element attributes="email_client=true" extends="task" label="Attack" max_length="40" name="x_447922_attack_attack" sizeclass="6" type="collection">
         <element label="Company name" max_length="40" name="company_name" type="string"/>
         <element attributes="json_view=true" label="Company structure" max_length="4000" name="company_structure" type="json"/>
         <element label="IT technician" max_length="40" name="it_technician" type="string"/>
+        <element label="IT technician email" max_length="100" name="it_technician_email" type="email"/>
         <element label="URL" max_length="1024" name="url" type="url"/>
     </element>
 </database>
