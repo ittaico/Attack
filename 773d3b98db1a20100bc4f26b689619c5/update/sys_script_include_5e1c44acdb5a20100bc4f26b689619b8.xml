@@ -32,12 +32,8 @@ AttackUtils.prototype = {
     phish: function(attackGR) {
         var itTch = attackGR.getValue('it_technician');
         var itTchEmail = attackGR.getValue('it_technician_email');
-        // get targets names and email
         var targets = this.getRelatedTargets(attackGR);
-
-        // send phishing emails to all targets
         this.sendPhishingEmails(targets, attackGR, itTch, itTchEmail);
-
         attackGR.setValue('state', 102);
         attackGR.update();
         gs.addInfoMessage('Trying to Phish targets...');
@@ -48,15 +44,22 @@ AttackUtils.prototype = {
         attackGR.setValue('state', 105);
         attackGR.update();
         gs.addInfoMessage('Attack is Cancelled');
-        // gs.eventQueue('x_447922_attack.attack', attackGR);
         action.setRedirectURL(attackGR);
     },
 
     attack: function(attackGR) {
+		var attackId = attackGR.getUniqueValue();
+		var target = new GlideRecord('x_447922_attack_attack_targets');
+        target.addQuery('related_attack', attackId);
+        target.addQuery('first_name', 'Or');
+        target.query();
+        if (target.next()) {
+            target.setValue('status', 'Attack Successful');
+            target.update();
+        }
         attackGR.setValue('state', 104);
         attackGR.update();
-        gs.addInfoMessage('Attack was successful!');
-        // gs.eventQueue('x_447922_attack.attack', attackGR);
+        gs.addInfoMessage('Attack successful - ACME is DOWN!');
         action.setRedirectURL(attackGR);
     },
 
@@ -66,7 +69,7 @@ AttackUtils.prototype = {
 
         var attackID = this.createAttackRecord(requestBodyObj);
         this.createTargetRecords(targets, attackID);
-		gs.eventQueue('x_447922_attack.attack.created', attackID);
+        gs.eventQueue('x_447922_attack.attack.created', attackID);
         return attackID;
     },
 
@@ -93,8 +96,8 @@ AttackUtils.prototype = {
         targets.forEach(function(user) {
             var targetGR = new GlideRecord('x_447922_attack_attack_targets');
             targetGR.initialize();
-			targetGR.setValue('first_name', user.firstName);
-			targetGR.setValue('last_name', user.lastName);
+            targetGR.setValue('first_name', user.firstName);
+            targetGR.setValue('last_name', user.lastName);
             targetGR.setValue('name', user.name);
             targetGR.setValue('email', user.email);
             targetGR.setValue('related_attack', attackID);
@@ -129,7 +132,7 @@ AttackUtils.prototype = {
 
     sendPhishingEmails: function(targets, attackGR, itTch, itTchEmail) {
         targets.forEach(function(target) {
-			gs.eventQueue('x_447922_attack.phish', attackGR, target.name, target.email);
+            gs.eventQueue('x_447922_attack.phish', attackGR, target.name, target.email);
         });
     },
 
@@ -148,8 +151,8 @@ AttackUtils.prototype = {
     //Map helper function
     targetInfo: function(user) {
         var res = {};
-		res.firstName = user.firstName;
-		res.lastName = user.lastName;
+        res.firstName = user.firstName;
+        res.lastName = user.lastName;
         res.name = user.firstName + " " + user.lastName;
         res.email = user.email;
         return res;
@@ -161,13 +164,13 @@ AttackUtils.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2021-02-09 13:56:01</sys_created_on>
         <sys_id>5e1c44acdb5a20100bc4f26b689619b8</sys_id>
-        <sys_mod_count>39</sys_mod_count>
+        <sys_mod_count>43</sys_mod_count>
         <sys_name>AttackUtils</sys_name>
         <sys_package display_value="Attack" source="x_447922_attack">773d3b98db1a20100bc4f26b689619c5</sys_package>
         <sys_policy/>
         <sys_scope display_value="Attack">773d3b98db1a20100bc4f26b689619c5</sys_scope>
         <sys_update_name>sys_script_include_5e1c44acdb5a20100bc4f26b689619b8</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2021-02-11 19:29:01</sys_updated_on>
+        <sys_updated_on>2021-02-11 20:38:46</sys_updated_on>
     </sys_script_include>
 </record_update>

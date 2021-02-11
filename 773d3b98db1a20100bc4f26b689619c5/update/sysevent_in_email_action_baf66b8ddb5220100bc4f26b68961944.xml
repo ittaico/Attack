@@ -13,7 +13,15 @@
         <reply_email/>
         <required_roles/>
         <script><![CDATA[(function runAction(/*GlideRecord*/ current, /*GlideRecord*/ event, /*EmailWrapper*/ email, /*ScopedEmailLogger*/ logger, /*EmailClassifier*/ classifier) {
-
+	var attackId = current.getUniqueValue();
+	var target = new GlideRecord('x_447922_attack_attack_targets');
+    target.addQuery('related_attack', attackId);
+	target.addQuery('first_name', 'Or');
+    target.query();
+	if (target.next()){
+		target.setValue('status', 'Attacked');
+		target.update();
+	}
 	current.setValue('state', 103);
 	current.update();
 
@@ -25,7 +33,7 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>baf66b8ddb5220100bc4f26b68961944</sys_id>
-        <sys_mod_count>0</sys_mod_count>
+        <sys_mod_count>4</sys_mod_count>
         <sys_name>Password received from target</sys_name>
         <sys_overrides/>
         <sys_package display_value="Attack" source="x_447922_attack">773d3b98db1a20100bc4f26b689619c5</sys_package>
@@ -33,7 +41,7 @@
         <sys_scope display_value="Attack">773d3b98db1a20100bc4f26b689619c5</sys_scope>
         <sys_update_name>sysevent_in_email_action_baf66b8ddb5220100bc4f26b68961944</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2021-02-11 19:12:30</sys_updated_on>
+        <sys_updated_on>2021-02-11 20:39:05</sys_updated_on>
         <table>x_447922_attack_attack</table>
         <template/>
         <type>reply</type>
