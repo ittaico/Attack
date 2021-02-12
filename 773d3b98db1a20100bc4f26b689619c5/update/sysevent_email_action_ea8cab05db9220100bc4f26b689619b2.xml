@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sysevent_email_action">
     <sysevent_email_action action="INSERT_OR_UPDATE">
-        <action_insert>false</action_insert>
+        <action_insert>true</action_insert>
         <action_update>false</action_update>
         <active>true</active>
         <advanced_condition/>
@@ -28,7 +28,7 @@
         <exclude_delegates>false</exclude_delegates>
         <force_delivery>false</force_delivery>
         <from>attack.app@noreply.com</from>
-        <generation_type>event</generation_type>
+        <generation_type>engine</generation_type>
         <importance/>
         <include_attachments>false</include_attachments>
         <item>event.parm1</item>
@@ -58,15 +58,15 @@
         <sys_domain>global</sys_domain>
         <sys_domain_path>/</sys_domain_path>
         <sys_id>ea8cab05db9220100bc4f26b689619b2</sys_id>
-        <sys_mod_count>2</sys_mod_count>
+        <sys_mod_count>3</sys_mod_count>
         <sys_name>Attack Created</sys_name>
         <sys_overrides/>
         <sys_package display_value="Attack" source="x_447922_attack">773d3b98db1a20100bc4f26b689619c5</sys_package>
         <sys_policy/>
         <sys_scope display_value="Attack">773d3b98db1a20100bc4f26b689619c5</sys_scope>
         <sys_update_name>sysevent_email_action_ea8cab05db9220100bc4f26b689619b2</sys_update_name>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2021-02-11 19:40:26</sys_updated_on>
+        <sys_updated_by>or</sys_updated_by>
+        <sys_updated_on>2021-02-11 20:10:55</sys_updated_on>
         <sys_version>2</sys_version>
         <template/>
         <type>email</type>
