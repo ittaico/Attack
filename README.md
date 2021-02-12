@@ -1,2 +1,4 @@
 # Attack
-Attack process for a university project
+ServiceNow application for managing phishing attacks. 
+BGU University Mini Project NETSE211
+
