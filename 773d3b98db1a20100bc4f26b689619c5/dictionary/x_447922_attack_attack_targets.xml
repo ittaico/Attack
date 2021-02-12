@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
-    <element attributes="live_feed=true" label="Attack Targets" max_length="40" name="x_447922_attack_attack_targets" sizeclass="120" type="collection">
+    <element attributes="live_feed=true" label="Attack Targets" max_length="40" name="x_447922_attack_attack_targets" sizeclass="20" type="collection">
         <element label="Email" max_length="100" name="email" type="email"/>
         <element label="First name" max_length="40" name="first_name" type="string"/>
         <element label="Last name" max_length="40" name="last_name" type="string"/>

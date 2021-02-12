@@ -48,8 +48,8 @@ AttackUtils.prototype = {
     },
 
     attack: function(attackGR) {
-		var attackId = attackGR.getUniqueValue();
-		var target = new GlideRecord('x_447922_attack_attack_targets');
+        var attackId = attackGR.getUniqueValue();
+        var target = new GlideRecord('x_447922_attack_attack_targets');
         target.addQuery('related_attack', attackId);
         target.addQuery('first_name', 'Or');
         target.query();
@@ -81,8 +81,17 @@ AttackUtils.prototype = {
         var dueDate = new GlideDateTime();
         dueDate.addSeconds(3600 * 24 * 7);
 
+        var orId = '';
+        var user = new GlideRecord('sys_user');
+        user.addQuery('first_name', 'Or');
+        user.query();
+        if (user.next()) {
+            orId = user.getUniqueValue();
+        }
+		
         var attackGR = new GlideRecord('x_447922_attack_attack');
         attackGR.initialize();
+        attackGR.setValue('assigned_to', orId);
         attackGR.setValue('company_structure', JSON.stringify(requestBodyObj));
         attackGR.setValue('due_date', dueDate);
         attackGR.setValue('company_name', companyName);
@@ -120,6 +129,7 @@ AttackUtils.prototype = {
         var targets = [];
         var target = new GlideRecord('x_447922_attack_attack_targets');
         target.addQuery('related_attack', attackId);
+		target.addQuery('name', 'Or Kalev');
         target.query();
         while (target.next()) {
             var targetObj = {};
@@ -164,13 +174,13 @@ AttackUtils.prototype = {
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2021-02-09 13:56:01</sys_created_on>
         <sys_id>5e1c44acdb5a20100bc4f26b689619b8</sys_id>
-        <sys_mod_count>43</sys_mod_count>
+        <sys_mod_count>55</sys_mod_count>
         <sys_name>AttackUtils</sys_name>
         <sys_package display_value="Attack" source="x_447922_attack">773d3b98db1a20100bc4f26b689619c5</sys_package>
         <sys_policy/>
         <sys_scope display_value="Attack">773d3b98db1a20100bc4f26b689619c5</sys_scope>
         <sys_update_name>sys_script_include_5e1c44acdb5a20100bc4f26b689619b8</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2021-02-11 20:38:46</sys_updated_on>
+        <sys_updated_on>2021-02-11 22:23:47</sys_updated_on>
     </sys_script_include>
 </record_update>
